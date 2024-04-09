@@ -7,7 +7,7 @@ import time
 def serve():
     with open("log", "w") as logfile:
         while True:
-            logfile.write(f"working...\n")
+            logfile.write("working...\n")
             logfile.flush()
             time.sleep(1)
 
