@@ -65,6 +65,7 @@ def stop():
     os.kill(pid, signal.SIGTERM)
 
     sys.stdout.write("stopped the daemon\n")
+    sys.stdout.flush()
 
 
 def main():
