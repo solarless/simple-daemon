@@ -10,5 +10,5 @@ only for Unix-like systems.
 
   - `python3 daemon.py start` — starts the daemon.
     Daemon itself produces stub messages into `log` file so you can see it's
-    working
+    working.
   - `python3 daemon.py stop` — stops the daemon.
