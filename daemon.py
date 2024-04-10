@@ -1,22 +1,32 @@
 import os
+import pathlib
 import signal
 import sys
 import time
+import typing
 
 
-def serve():
-    with open("log", "w") as logfile:
+ROOT = pathlib.Path(__file__).parent
+
+PID_FILE = ROOT / "pid"
+
+LOG_FILE = ROOT / "log"
+
+
+def serve() -> typing.NoReturn:
+    with LOG_FILE.open("w") as logfile:
         while True:
             logfile.write("working...\n")
             logfile.flush()
             time.sleep(1)
 
 
-def start():
-    if os.path.exists("pid"):
+def start() -> None:
+    if PID_FILE.exists():
         sys.stderr.write("seems like the daemon is already running\n")
         sys.stderr.flush()
         sys.exit(1)
+
 
     # Someone does fork two times, but I found an article which explains when
     # it is necessary. As far as I understand, it is necessary only for cases
@@ -25,7 +35,7 @@ def start():
     pid = os.fork()
 
     if pid != 0:
-        with open("pid", "w") as pidfile:
+        with PID_FILE.open("w") as pidfile:
             pidfile.write(str(pid))
 
         sys.stdout.write(f"pid: {pid}\n")
@@ -48,14 +58,14 @@ def start():
     serve()
 
 
-def handle_stopping(signum, frame):
-    os.remove("pid")
+def handle_stopping(signum, frame) -> typing.NoReturn:
+    os.kill(PID_FILE)
     sys.exit(0)
 
 
-def stop():
+def stop() -> None:
     try:
-        with open("pid") as pidfile:
+        with PID_FILE.open() as pidfile:
             pid = int(pidfile.read())
     except FileNotFoundError:
         sys.stderr.write("seems like the daemon is not running\n")
@@ -68,7 +78,7 @@ def stop():
     sys.stdout.flush()
 
 
-def main():
+def main() -> None:
     try:
         command = sys.argv[1]
     except IndexError:
