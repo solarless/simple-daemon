@@ -59,7 +59,7 @@ def start() -> None:
 
 
 def handle_stopping(signum, frame) -> typing.NoReturn:
-    os.kill(PID_FILE)
+    os.remove(PID_FILE)
     sys.exit(0)
 
 
