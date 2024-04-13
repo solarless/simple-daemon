@@ -21,7 +21,7 @@ def serve() -> typing.NoReturn:
             time.sleep(1)
 
 
-def start() -> None:
+def start() -> typing.NoReturn:
     if PID_FILE.exists():
         sys.stderr.write("seems like the daemon is already running\n")
         sys.stderr.flush()
